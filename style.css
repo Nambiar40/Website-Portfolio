@@ -57,16 +57,39 @@ body {
 }
 
 .hero img {
-  width: 180px;
-  height: auto;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 /* About */
 .about {
   background: #1a1a1a;
   color: #e0e0e0;
-  padding: 40px 20px;
+  padding: 60px 20px 60px 20px;
+}
+
+.education {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.skills {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.projects {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.contact {
+  margin-top: 60px;
+  margin-bottom: 60px;
 }
 
 .about h2 {
@@ -77,8 +100,8 @@ body {
   max-width: 800px;
   margin: 0 auto 15px auto;
   line-height: 1.6;
-  text-align: justify;
-  text-indent: 2em;
+  text-align: center;
+  text-indent: 0;
   padding: 0 20px;
 }
 
@@ -86,6 +109,7 @@ body {
 .education {
   background: #1a1a1a;
   color: #e0e0e0;
+  margin-top: 40px;
   margin-bottom: 60px;
 }
 
@@ -106,7 +130,7 @@ body {
   border: 1px solid #3D5A99;
   padding: 20px;
   border-radius: 8px;
-  text-align: left;
+  text-align: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   color: #F2F0EA;
   transition: all 0.3s ease;
@@ -216,6 +240,7 @@ body {
 .contact p {
   margin-top: 0;
   margin-bottom: 15px;
+  text-align: center;
 }
 
 /* Contact Social Icons */
