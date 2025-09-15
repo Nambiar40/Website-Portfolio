@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>My Portfolio</title>
@@ -136,6 +136,81 @@
 <footer class="footer">
   &copy; 2025 Yedunandan Nambiar. All Rights Reserved.
 </footer>
+
+<script>
+// Load data from localStorage
+document.addEventListener('DOMContentLoaded', function() {
+  // Hero
+  const hero = JSON.parse(localStorage.getItem('hero'));
+  if (hero) {
+    document.querySelector('#home h1').textContent = hero.name;
+    document.querySelector('#home p').textContent = hero.title;
+    document.querySelector('#home p:nth-of-type(2)').textContent = hero.desc;
+    document.querySelector('#home img').src = hero.image;
+  }
+
+  // About
+  const about = localStorage.getItem('about');
+  if (about) {
+    document.querySelector('#about p').textContent = about;
+  }
+
+  // Education
+  // const education = JSON.parse(localStorage.getItem('education'));
+  // if (education) {
+  //   const eduList = document.querySelector('.edu-list');
+  //   eduList.innerHTML = '';
+  //   education.forEach(edu => {
+  //     const card = document.createElement('div');
+  //     card.className = 'edu-card';
+  //     card.innerHTML = `
+  //       <h3>${edu.degree}</h3>
+  //       <p><strong>Institution:</strong> ${edu.institution}</p>
+  //       <p><strong>Year:</strong> ${edu.year}</p>
+  //       <p><strong>Result:</strong> ${edu.result}</p>
+  //     `;
+  //     eduList.appendChild(card);
+  //   });
+  // }
+
+  // Skills
+  // const skills = localStorage.getItem('skills');
+  // if (skills) {
+  //   const skillsGrid = document.querySelector('.skills-grid');
+  //   skillsGrid.innerHTML = '';
+  //   skills.split(',').forEach(skill => {
+  //     const div = document.createElement('div');
+  //     div.textContent = skill.trim();
+  //     skillsGrid.appendChild(div);
+  //   });
+  // }
+
+  // Projects
+  const projects = JSON.parse(localStorage.getItem('projects'));
+  if (projects) {
+    const projectsGrid = document.querySelector('.projects-grid');
+    projectsGrid.innerHTML = '';
+    projects.forEach(proj => {
+      const card = document.createElement('div');
+      card.className = 'project-card';
+      card.innerHTML = `
+        <h3>${proj.title}</h3>
+        <p>${proj.desc}</p>
+      `;
+      projectsGrid.appendChild(card);
+    });
+  }
+
+  // Contact
+  const contact = JSON.parse(localStorage.getItem('contact'));
+  if (contact) {
+    document.querySelector('#contact p').textContent = `Email: ${contact.email}`;
+    document.querySelector('#contact p:nth-of-type(2)').textContent = `Phone: ${contact.phone}`;
+    document.querySelector('#contact .social-icon[href*="github"]').href = contact.github;
+    document.querySelector('#contact .social-icon[href*="linkedin"]').href = contact.linkedin;
+  }
+});
+</script>
 
 </body>
 </html>

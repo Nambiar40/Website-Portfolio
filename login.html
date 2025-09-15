@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Login</title>
+  <link href="Bootstrap/bootstrap-5.3.8-dist/bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light d-flex align-items-center" style="height: 100vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Login</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="signup-tab" data-bs-toggle="pill" data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false">Signup</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="authTabContent">
+              <!-- Login Tab -->
+              <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                <h3 class="card-title mb-4 text-center">Admin Login</h3>
+                <form id="loginForm">
+                  <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required />
+                  </div>
+                  <div id="loginErrorMsg" class="text-danger mb-3" style="display:none;">Invalid username or password</div>
+                  <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+              </div>
+              <!-- Signup Tab -->
+              <div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+                <h3 class="card-title mb-4 text-center">Admin Signup</h3>
+                <form id="signupForm">
+                  <div class="mb-3">
+                    <label for="signupUsername" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="signupUsername" placeholder="Enter username" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="signupPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" placeholder="Enter password" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" required />
+                  </div>
+                  <div id="signupErrorMsg" class="text-danger mb-3" style="display:none;"></div>
+                  <button type="submit" class="btn btn-success w-100">Signup</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="Bootstrap/bootstrap-5.3.8-dist/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const loginErrorMsg = document.getElementById('loginErrorMsg');
+    const signupErrorMsg = document.getElementById('signupErrorMsg');
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // Get stored credentials or use default
+      const storedUser = JSON.parse(localStorage.getItem('adminUser')) || { username: 'admin', password: 'admin123' };
+
+      if (username === storedUser.username && password === storedUser.password) {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        window.location.href = 'admin.html';
+      } else {
+        loginErrorMsg.style.display = 'block';
+        loginErrorMsg.textContent = 'Invalid username or password';
+      }
+    });
+
+    signupForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('signupUsername').value.trim();
+      const password = document.getElementById('signupPassword').value.trim();
+      const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+      if (password !== confirmPassword) {
+        signupErrorMsg.style.display = 'block';
+        signupErrorMsg.textContent = 'Passwords do not match';
+        return;
+      }
+
+      if (username && password) {
+        localStorage.setItem('adminUser', JSON.stringify({ username, password }));
+        signupErrorMsg.style.display = 'block';
+        signupErrorMsg.className = 'text-success mb-3';
+        signupErrorMsg.textContent = 'Signup successful! You can now login.';
+        // Switch to login tab
+        const loginTab = new bootstrap.Tab(document.getElementById('login-tab'));
+        loginTab.show();
+      } else {
+        signupErrorMsg.style.display = 'block';
+        signupErrorMsg.textContent = 'Please fill all fields';
+      }
+    });
+
+    // If already logged in, redirect to admin panel
+    if (sessionStorage.getItem('isLoggedIn') === 'true') {
+      window.location.href = 'admin.html';
+    }
+  </script>
+</body>
+</html>
