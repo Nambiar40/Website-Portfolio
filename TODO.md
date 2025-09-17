@@ -1,11 +1,11 @@
-# TODO List for Adding Dynamic Skill Form
+# Admin Panel Refactor TODO
 
-- [x] Update admin.html: Replace skills textarea with dynamic list container and add "Add Skill" button
-- [x] Update admin.js: Modify loadData to load skills as array
-- [x] Update admin.js: Add renderSkills function
-- [x] Update admin.js: Add addSkill function
-- [x] Update admin.js: Add removeSkill function
-- [x] Update admin.js: Update skillsForm submit handler to save array
-- [x] Update admin.js: Update setReadonly to handle skills list inputs
-- [x] Update admin.js: Update toggleEdit to include skills section
-- [ ] Test the functionality in admin panel
+- [x] Modify admin.html to dashboard with links to separate section pages
+- [x] Create hero-admin.html with navbar and hero form
+- [x] Create about-admin.html with navbar and about form
+- [x] Create skills-admin.html with navbar and skills form
+- [x] Create education-admin.html with navbar and education form
+- [x] Create contact-admin.html with navbar and contact form
+- [x] Modify admin.js to add conditional checks for section elements
+- [ ] Test each page loads correctly and forms save to localStorage
+- [ ] Test logout functionality on all pages

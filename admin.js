@@ -4,46 +4,56 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true') {
 }
 
 function loadData() {
-  const hero = JSON.parse(localStorage.getItem('hero')) || { name: 'Hi, Yedunandan Nambiar Here!', title: 'Data Analyst', desc: 'Welcome to My Portfolio', image: 'images/yedu-portfolio.jpg' };
-  document.getElementById('heroName').value = hero.name;
-  document.getElementById('heroTitle').value = hero.title;
-  document.getElementById('heroDesc').value = hero.desc;
-  document.getElementById('heroImage').value = hero.image;
+  if (document.getElementById('heroName')) {
+    const hero = JSON.parse(localStorage.getItem('hero')) || { name: 'Hi, Yedunandan Nambiar Here!', title: 'Data Analyst', desc: 'Welcome to My Portfolio', image: 'images/yedu-portfolio.jpg' };
+    document.getElementById('heroName').value = hero.name;
+    document.getElementById('heroTitle').value = hero.title;
+    document.getElementById('heroDesc').value = hero.desc;
+    document.getElementById('heroImage').value = hero.image;
+    setReadonly('hero', true);
+  }
 
-  const about = localStorage.getItem('about') || 'I am a passionate Data Analyst...';
-  document.getElementById('aboutText').value = about;
+  if (document.getElementById('aboutText')) {
+    const about = localStorage.getItem('about') || 'I am a passionate Data Analyst...';
+    document.getElementById('aboutText').value = about;
+    setReadonly('about', true);
+  }
 
-  const education = JSON.parse(localStorage.getItem('education')) || [
-    { degree: 'B.Tech Information Technology', institution: 'Marwadi University', year: '2023 - 2027', result: '8.00 CGPA' },
-    { degree: '12th Grade [CBSE]', institution: 'Chinmaya Vidyalaya Kannur', year: '2023', result: '75%' },
-    { degree: '10th Grade [CBSE]', institution: 'Kendriya Vidyalaya', year: '2021', result: '85%' }
-  ];
-  renderEducation(education);
+  if (document.getElementById('educationList')) {
+    const education = JSON.parse(localStorage.getItem('education')) || [
+      { degree: 'B.Tech Information Technology', institution: 'Marwadi University', year: '2023 - 2027', result: '8.00 CGPA' },
+      { degree: '12th Grade [CBSE]', institution: 'Chinmaya Vidyalaya Kannur', year: '2023', result: '75%' },
+      { degree: '10th Grade [CBSE]', institution: 'Kendriya Vidyalaya', year: '2021', result: '85%' }
+    ];
+    renderEducation(education);
+    setReadonly('education', true);
+  }
 
-  const skills = JSON.parse(localStorage.getItem('skills')) || ['HTML', 'CSS', 'JavaScript', 'Python', 'Java', 'C++', 'Django', 'SQL', 'Git', 'Excel', 'Tableau', 'Power BI'];
-  renderSkills(skills);
+  if (document.getElementById('skillsList')) {
+    const skills = JSON.parse(localStorage.getItem('skills')) || ['HTML', 'CSS', 'JavaScript', 'Python', 'Java', 'C++', 'Django', 'SQL', 'Git', 'Excel', 'Tableau', 'Power BI'];
+    renderSkills(skills);
+    setReadonly('skills', true);
+  }
 
-  const projects = JSON.parse(localStorage.getItem('projects')) || [
-    { title: 'Website Locker', desc: 'A Chrome Extension + Django project...' },
-    { title: 'E-Commerce Website', desc: 'A Django-powered online shopping platform...' },
-    { title: 'Tatkal Ticket Auto-booker', desc: 'An automation system for booking IRCTC Tatkal tickets...' },
-    { title: 'Chat Application', desc: 'A real-time chat app built with Django Channels...' }
-  ];
-  renderProjects(projects);
+  if (document.getElementById('projectsList')) {
+    const projects = JSON.parse(localStorage.getItem('projects')) || [
+      { title: 'Website Locker', desc: 'A Chrome Extension + Django project...' },
+      { title: 'E-Commerce Website', desc: 'A Django-powered online shopping platform...' },
+      { title: 'Tatkal Ticket Auto-booker', desc: 'An automation system for booking IRCTC Tatkal tickets...' },
+      { title: 'Chat Application', desc: 'A real-time chat app built with Django Channels...' }
+    ];
+    renderProjects(projects);
+    setReadonly('projects', true);
+  }
 
-  const contact = JSON.parse(localStorage.getItem('contact')) || { email: 'yedunandannambiar@gmail.com', phone: '+91 9876543210', github: 'https://github.com/yedunandan', linkedin: 'https://www.linkedin.com/in/yedunandan-nambiar-030739348/' };
-  document.getElementById('contactEmail').value = contact.email;
-  document.getElementById('contactPhone').value = contact.phone;
-  document.getElementById('contactGithub').value = contact.github;
-  document.getElementById('contactLinkedin').value = contact.linkedin;
-
-  // Set all inputs and textareas readonly initially
-  setReadonly('hero', true);
-  setReadonly('about', true);
-  setReadonly('education', true);
-  setReadonly('skills', true);
-  setReadonly('projects', true);
-  setReadonly('contact', true);
+  if (document.getElementById('contactEmail')) {
+    const contact = JSON.parse(localStorage.getItem('contact')) || { email: 'yedunandannambiar@gmail.com', phone: '+91 9876543210', github: 'https://github.com/yedunandan', linkedin: 'https://www.linkedin.com/in/yedunandan-nambiar-030739348/' };
+    document.getElementById('contactEmail').value = contact.email;
+    document.getElementById('contactPhone').value = contact.phone;
+    document.getElementById('contactGithub').value = contact.github;
+    document.getElementById('contactLinkedin').value = contact.linkedin;
+    setReadonly('contact', true);
+  }
 }
 
 // Render education list
@@ -143,79 +153,90 @@ function setReadonly(sectionId, readonly) {
   });
 }
 
-document.getElementById('heroForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const hero = {
-    name: document.getElementById('heroName').value,
-    title: document.getElementById('heroTitle').value,
-    desc: document.getElementById('heroDesc').value,
-    image: document.getElementById('heroImage').value
-  };
-  localStorage.setItem('hero', JSON.stringify(hero));
-  alert('Hero saved!');
-  setReadonly('hero', true);
-});
-
-document.getElementById('aboutForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const about = document.getElementById('aboutText').value;
-  localStorage.setItem('about', about);
-  alert('About saved!');
-  setReadonly('about', true);
-});
-
-document.getElementById('educationForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const education = JSON.parse(localStorage.getItem('education')) || [];
-  // Update from inputs
-  document.querySelectorAll('#educationList input').forEach(input => {
-    const index = input.dataset.index;
-    const field = input.dataset.field;
-    education[index][field] = input.value;
+if (document.getElementById('heroForm')) {
+  document.getElementById('heroForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const hero = {
+      name: document.getElementById('heroName').value,
+      title: document.getElementById('heroTitle').value,
+      desc: document.getElementById('heroDesc').value,
+      image: document.getElementById('heroImage').value
+    };
+    localStorage.setItem('hero', JSON.stringify(hero));
+    alert('Hero saved!');
+    setReadonly('hero', true);
   });
-  localStorage.setItem('education', JSON.stringify(education));
-  alert('Education saved!');
-  setReadonly('education', true);
-});
+}
 
-document.getElementById('skillsForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const skills = [];
-  document.querySelectorAll('#skillsList input').forEach(input => {
-    skills.push(input.value);
+if (document.getElementById('aboutForm')) {
+  document.getElementById('aboutForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const about = document.getElementById('aboutText').value;
+    localStorage.setItem('about', about);
+    alert('About saved!');
+    setReadonly('about', true);
   });
-  localStorage.setItem('skills', JSON.stringify(skills));
-  alert('Skills saved!');
-  setReadonly('skills', true);
-});
+}
 
-document.getElementById('projectsForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const projects = JSON.parse(localStorage.getItem('projects')) || [];
-  // Update from inputs
-  document.querySelectorAll('#projectsList input, #projectsList textarea').forEach(input => {
-    const index = input.dataset.index;
-    const field = input.dataset.field;
-    projects[index][field] = input.value;
+if (document.getElementById('educationForm')) {
+  document.getElementById('educationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const education = JSON.parse(localStorage.getItem('education')) || [];
+    // Update from inputs
+    document.querySelectorAll('#educationList input').forEach(input => {
+      const index = input.dataset.index;
+      const field = input.dataset.field;
+      education[index][field] = input.value;
+    });
+    localStorage.setItem('education', JSON.stringify(education));
+    alert('Education saved!');
+    setReadonly('education', true);
   });
-  localStorage.setItem('projects', JSON.stringify(projects));
-  alert('Projects saved!');
-  setReadonly('projects', true);
-});
+}
 
+if (document.getElementById('skillsForm')) {
+  document.getElementById('skillsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const skills = [];
+    document.querySelectorAll('#skillsList input').forEach(input => {
+      skills.push(input.value);
+    });
+    localStorage.setItem('skills', JSON.stringify(skills));
+    alert('Skills saved!');
+    setReadonly('skills', true);
+  });
+}
 
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const contact = {
-    email: document.getElementById('contactEmail').value,
-    phone: document.getElementById('contactPhone').value,
-    github: document.getElementById('contactGithub').value,
-    linkedin: document.getElementById('contactLinkedin').value
-  };
-  localStorage.setItem('contact', JSON.stringify(contact));
-  alert('Contact saved!');
-  setReadonly('contact', true);
-});
+if (document.getElementById('projectsForm')) {
+  document.getElementById('projectsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+    // Update from inputs
+    document.querySelectorAll('#projectsList input, #projectsList textarea').forEach(input => {
+      const index = input.dataset.index;
+      const field = input.dataset.field;
+      projects[index][field] = input.value;
+    });
+    localStorage.setItem('projects', JSON.stringify(projects));
+    alert('Projects saved!');
+    setReadonly('projects', true);
+  });
+}
+
+if (document.getElementById('contactForm')) {
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const contact = {
+      email: document.getElementById('contactEmail').value,
+      phone: document.getElementById('contactPhone').value,
+      github: document.getElementById('contactGithub').value,
+      linkedin: document.getElementById('contactLinkedin').value
+    };
+    localStorage.setItem('contact', JSON.stringify(contact));
+    alert('Contact saved!');
+    setReadonly('contact', true);
+  });
+}
 
 function toggleEdit(sectionId) {
   const form = document.getElementById(sectionId + 'Form');

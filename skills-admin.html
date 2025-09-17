@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skills Section Admin</title>
+  <link href="Bootstrap/bootstrap-5.3.8-dist/bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="admin.html">Admin Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="hero-admin.html">Hero</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about-admin.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="skills-admin.html">Skills</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="education-admin.html">Education</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact-admin.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="projects-admin.html">Projects</a>
+          </li>
+        </ul>
+        <button class="btn btn-outline-light" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h2>Edit Skills Section</h2>
+    <form id="skillsForm">
+      <div id="skillsList">
+        <!-- Dynamic skill items -->
+      </div>
+      <button type="button" class="btn btn-warning me-2" onclick="toggleEdit('skills')">Edit</button>
+      <button type="button" class="btn btn-secondary mb-3" onclick="addSkill()">Add Skill</button>
+      <button type="submit" class="btn btn-primary">Save Skills</button>
+    </form>
+  </div>
+
+  <script src="Bootstrap/bootstrap-5.3.8-dist/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

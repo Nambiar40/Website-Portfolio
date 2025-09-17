@@ -174,16 +174,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // }
 
   // Skills
-  // const skills = localStorage.getItem('skills');
-  // if (skills) {
-  //   const skillsGrid = document.querySelector('.skills-grid');
-  //   skillsGrid.innerHTML = '';
-  //   skills.split(',').forEach(skill => {
-  //     const div = document.createElement('div');
-  //     div.textContent = skill.trim();
-  //     skillsGrid.appendChild(div);
-  //   });
-  // }
+  const skills = JSON.parse(localStorage.getItem('skills'));
+  if (skills) {
+    const skillsGrid = document.querySelector('.skills-grid');
+    skillsGrid.innerHTML = '';
+    skills.forEach(skill => {
+      const div = document.createElement('div');
+      div.textContent = skill;
 
   // Projects
   const projects = JSON.parse(localStorage.getItem('projects'));
