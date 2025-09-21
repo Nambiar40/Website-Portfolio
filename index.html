@@ -15,6 +15,7 @@
   <a href="#projects">Projects</a>
   <a href="#skills">Skills</a>
   <a href="#contact">Contact</a>
+  
 </nav>
 
 <!-- Hero Section -->
@@ -22,7 +23,7 @@
   <div class="hero-text">
     <h1>Hi, Yedunandan Nambiar Here!</h1>
     <p>Data Analyst</p>
-    <p> Welcome to My Portfolio</p><br>
+    <p>Welcome to My Portfolio</p>
     <a href="cv.pdf" download class="download-btn">
       <i class="fas fa-download"></i>
       Download CV
@@ -138,73 +139,112 @@
 </footer>
 
 <script>
-// Load data from localStorage
+// Load data from localStorage with error handling
 document.addEventListener('DOMContentLoaded', function() {
-  // Hero
-  const hero = JSON.parse(localStorage.getItem('hero'));
-  if (hero) {
-    document.querySelector('#home h1').textContent = hero.name;
-    document.querySelector('#home p').textContent = hero.title;
-    document.querySelector('#home p:nth-of-type(2)').textContent = hero.desc;
-    document.querySelector('#home img').src = hero.image;
-  }
+  try {
+    console.log('Loading data from localStorage...');
 
-  // About
-  const about = localStorage.getItem('about');
-  if (about) {
-    document.querySelector('#about p').textContent = about;
-  }
+    // Hero section
+    try {
+      const hero = JSON.parse(localStorage.getItem('hero'));
+      if (hero && hero.name && hero.title && hero.desc) {
+        const heroTitle = document.querySelector('#home h1');
+        const heroSubtitle = document.querySelector('#home p');
+        const heroDesc = document.querySelector('#home p:nth-of-type(2)');
+        const heroImg = document.querySelector('#home img');
 
-  // Education
-  // const education = JSON.parse(localStorage.getItem('education'));
-  // if (education) {
-  //   const eduList = document.querySelector('.edu-list');
-  //   eduList.innerHTML = '';
-  //   education.forEach(edu => {
-  //     const card = document.createElement('div');
-  //     card.className = 'edu-card';
-  //     card.innerHTML = `
-  //       <h3>${edu.degree}</h3>
-  //       <p><strong>Institution:</strong> ${edu.institution}</p>
-  //       <p><strong>Year:</strong> ${edu.year}</p>
-  //       <p><strong>Result:</strong> ${edu.result}</p>
-  //     `;
-  //     eduList.appendChild(card);
-  //   });
-  // }
+        if (heroTitle) heroTitle.textContent = hero.name;
+        if (heroSubtitle) heroSubtitle.textContent = hero.title;
+        if (heroDesc) heroDesc.textContent = hero.desc;
+        if (heroImg && hero.image) heroImg.src = hero.image;
+        console.log('Hero section loaded successfully');
+      }
+    } catch (error) {
+      console.warn('Error loading hero data:', error);
+    }
 
-  // Skills
-  const skills = JSON.parse(localStorage.getItem('skills'));
-  if (skills) {
-    const skillsGrid = document.querySelector('.skills-grid');
-    skillsGrid.innerHTML = '';
-    skills.forEach(skill => {
-      const div = document.createElement('div');
-      div.textContent = skill;
+    // About section
+    try {
+      const about = localStorage.getItem('about');
+      if (about) {
+        const aboutElement = document.querySelector('#about p');
+        if (aboutElement) {
+          aboutElement.textContent = about;
+          console.log('About section loaded successfully');
+        }
+      }
+    } catch (error) {
+      console.warn('Error loading about data:', error);
+    }
 
-  // Projects
-  const projects = JSON.parse(localStorage.getItem('projects'));
-  if (projects) {
-    const projectsGrid = document.querySelector('.projects-grid');
-    projectsGrid.innerHTML = '';
-    projects.forEach(proj => {
-      const card = document.createElement('div');
-      card.className = 'project-card';
-      card.innerHTML = `
-        <h3>${proj.title}</h3>
-        <p>${proj.desc}</p>
-      `;
-      projectsGrid.appendChild(card);
-    });
-  }
+    // Skills section
+    try {
+      const skills = JSON.parse(localStorage.getItem('skills'));
+      if (skills && Array.isArray(skills)) {
+        const skillsGrid = document.querySelector('.skills-grid');
+        if (skillsGrid) {
+          skillsGrid.innerHTML = '';
+          skills.forEach(skill => {
+            if (skill) {
+              const div = document.createElement('div');
+              div.textContent = skill;
+              skillsGrid.appendChild(div);
+            }
+          });
+          console.log('Skills section loaded successfully');
+        }
+      }
+    } catch (error) {
+      console.warn('Error loading skills data:', error);
+    }
 
-  // Contact
-  const contact = JSON.parse(localStorage.getItem('contact'));
-  if (contact) {
-    document.querySelector('#contact p').textContent = `Email: ${contact.email}`;
-    document.querySelector('#contact p:nth-of-type(2)').textContent = `Phone: ${contact.phone}`;
-    document.querySelector('#contact .social-icon[href*="github"]').href = contact.github;
-    document.querySelector('#contact .social-icon[href*="linkedin"]').href = contact.linkedin;
+    // Projects section
+    try {
+      const projects = JSON.parse(localStorage.getItem('projects'));
+      if (projects && Array.isArray(projects)) {
+        const projectsGrid = document.querySelector('.projects-grid');
+        if (projectsGrid) {
+          projectsGrid.innerHTML = '';
+          projects.forEach(proj => {
+            if (proj && proj.title && proj.desc) {
+              const card = document.createElement('div');
+              card.className = 'project-card';
+              card.innerHTML = `
+                <h3>${proj.title}</h3>
+                <p>${proj.desc}</p>
+              `;
+              projectsGrid.appendChild(card);
+            }
+          });
+          console.log('Projects section loaded successfully');
+        }
+      }
+    } catch (error) {
+      console.warn('Error loading projects data:', error);
+    }
+
+    // Contact section
+    try {
+      const contact = JSON.parse(localStorage.getItem('contact'));
+      if (contact) {
+        const emailElement = document.querySelector('#contact p');
+        const phoneElement = document.querySelector('#contact p:nth-of-type(2)');
+        const githubLink = document.querySelector('#contact .social-icon[href*="github"]');
+        const linkedinLink = document.querySelector('#contact .social-icon[href*="linkedin"]');
+
+        if (emailElement && contact.email) emailElement.textContent = `Email: ${contact.email}`;
+        if (phoneElement && contact.phone) phoneElement.textContent = `Phone: ${contact.phone}`;
+        if (githubLink && contact.github) githubLink.href = contact.github;
+        if (linkedinLink && contact.linkedin) linkedinLink.href = contact.linkedin;
+        console.log('Contact section loaded successfully');
+      }
+    } catch (error) {
+      console.warn('Error loading contact data:', error);
+    }
+
+    console.log('All localStorage data loading completed');
+  } catch (error) {
+    console.error('Error in DOMContentLoaded event:', error);
   }
 });
 </script>
