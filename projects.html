@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Portfolio - Projects</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Edit Portfolio Sections</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="hero.html">Hero</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">Education</a></li>
+          <li class="nav-item"><a class="nav-link" href="skills.html">Skills</a></li>
+          <li class="nav-item"><a class="nav-link active" href="projects.html">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h3>Projects</h3>
+    <div id="project-list"></div>
+
+    <button class="btn btn-secondary mt-3" onclick="addProject()">Add Project</button>
+    <button class="btn btn-primary btn-sm mt-3" onclick="saveProject()">Save</button>
+  </div>
+
+  <script>
+    // Load existing projects from localStorage
+    function loadProjects() {
+      const projects = JSON.parse(localStorage.getItem('projects')) || [];
+      const container = document.getElementById("project-list");
+      container.innerHTML = '';
+
+      if (projects.length === 0) {
+        // Load default projects if none exist in localStorage
+        const defaultProjects = [
+          {
+            title: "Website Locker",
+            desc: "A Chrome Extension + Django project designed to lock access to websites (like Gmail) until the user successfully authenticates."
+          },
+          {
+            title: "E-Commerce Website",
+            desc: "A Django-powered online shopping platform with product listings, cart, and secure checkout."
+          },
+          {
+            title: "Tatkal Ticket Auto-booker",
+            desc: "An automation system for booking IRCTC Tatkal tickets using Python, Django, and Selenium."
+          },
+          {
+            title: "Chat Application",
+            desc: "A real-time chat app built with Django Channels and WebSockets."
+          }
+        ];
+        localStorage.setItem('projects', JSON.stringify(defaultProjects));
+        defaultProjects.forEach(project => displayProject(project, false));
+      } else {
+        projects.forEach(project => displayProject(project, true));
+      }
+    }
+
+    // Display a project in the admin panel
+    function displayProject(project, isEditable) {
+      const container = document.getElementById("project-list");
+      const div = document.createElement("div");
+      div.classList.add("border", "p-3", "mt-3", "project-item");
+      div.dataset.title = project.title;
+
+      div.innerHTML = `
+        <div class="mb-2">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control project-title" value="${project.title}" ${isEditable ? '' : 'readonly'}>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Description</label>
+          <textarea class="form-control project-desc" ${isEditable ? '' : 'readonly'}>${project.desc}</textarea>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm ${isEditable ? 'btn-warning' : 'btn-info'}" onclick="toggleEdit(this)">${isEditable ? 'Edit' : 'Save'}</button>
+          ${isEditable ? '<button class="btn btn-sm btn-danger ms-2" onclick="removeProject(this)">Remove</button>' : ''}
+        </div>
+      `;
+
+      container.appendChild(div);
+    }
+
+    // Toggle edit mode for a project
+    function toggleEdit(button) {
+      const projectItem = button.closest('.project-item');
+      const titleInput = projectItem.querySelector('.project-title');
+      const descTextarea = projectItem.querySelector('.project-desc');
+      const isReadonly = titleInput.hasAttribute('readonly');
+
+      if (isReadonly) {
+        // Enter edit mode
+        titleInput.removeAttribute('readonly');
+        descTextarea.removeAttribute('readonly');
+        button.textContent = 'Save';
+        button.className = 'btn btn-sm btn-warning';
+      } else {
+        // Save changes
+        titleInput.setAttribute('readonly', 'readonly');
+        descTextarea.setAttribute('readonly', 'readonly');
+        button.textContent = 'Edit';
+        button.className = 'btn btn-sm btn-info';
+        saveProject();
+      }
+    }
+
+    // Add new project
+    function addProject() {
+      const container = document.getElementById("project-list");
+      const div = document.createElement("div");
+      div.classList.add("border", "p-3", "mt-3", "project-item");
+
+      div.innerHTML = `
+        <div class="mb-2">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control project-title" placeholder="Enter project name">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Description</label>
+          <textarea class="form-control project-desc" placeholder="Enter project description"></textarea>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm btn-success" onclick="saveNewProject(this)">Save New</button>
+          <button class="btn btn-sm btn-danger" onclick="cancelNewProject(this)">Cancel</button>
+        </div>
+      `;
+
+      container.appendChild(div);
+    }
+
+    // Save new project
+    function saveNewProject(button) {
+      const projectItem = button.closest('.project-item');
+      const titleInput = projectItem.querySelector('.project-title');
+      const descTextarea = projectItem.querySelector('.project-desc');
+
+      const title = titleInput.value.trim();
+      const desc = descTextarea.value.trim();
+
+      if (!title || !desc) {
+        alert('Please fill in both project name and description');
+        return;
+      }
+
+      // Add to localStorage
+      const projects = JSON.parse(localStorage.getItem('projects')) || [];
+      projects.push({ title, desc });
+      localStorage.setItem('projects', JSON.stringify(projects));
+
+      // Refresh the display
+      loadProjects();
+    }
+
+    // Cancel new project
+    function cancelNewProject(button) {
+      const projectItem = button.closest('.project-item');
+      projectItem.remove();
+    }
+
+    // Save all projects
+    function saveProject() {
+      const projects = [];
+      const projectItems = document.querySelectorAll('.project-item');
+
+      projectItems.forEach(item => {
+        const title = item.querySelector('.project-title').value.trim();
+        const desc = item.querySelector('.project-desc').value.trim();
+
+        if (title && desc) {
+          projects.push({ title, desc });
+        }
+      });
+
+      localStorage.setItem('projects', JSON.stringify(projects));
+      alert("Projects saved successfully!");
+
+      // Refresh the display
+      loadProjects();
+    }
+
+    // Remove project
+    function removeProject(button) {
+      if (confirm('Are you sure you want to remove this project?')) {
+        const projectItem = button.closest('.project-item');
+        const title = projectItem.dataset.title;
+
+        // Remove from localStorage
+        const projects = JSON.parse(localStorage.getItem('projects')) || [];
+        const updatedProjects = projects.filter(project => project.title !== title);
+        localStorage.setItem('projects', JSON.stringify(updatedProjects));
+
+        // Remove from DOM
+        projectItem.remove();
+
+        alert('Project removed successfully!');
+      }
+    }
+
+    // Load projects when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProjects();
+    });
+  </script>
+</body>
+</html>

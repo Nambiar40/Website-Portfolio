@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Portfolio - Skills</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Edit Portfolio Sections</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="hero.html">Hero</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">Education</a></li>
+          <li class="nav-item"><a class="nav-link active" href="skills.html">Skills</a></li>
+          <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h3>Skills</h3>
+    <div id="skills-container"></div>
+
+    <div class="mt-3">
+      <input type="text" id="new-skill" class="form-control" placeholder="Enter new skill">
+      <button class="btn btn-secondary mt-2" onclick="addSkill()">Add Skill</button>
+    </div>
+    <button class="btn btn-warning btn-sm mt-3" onclick="editSkills()">Edit</button>
+    <button class="btn btn-primary btn-sm mt-3" onclick="saveSkills()">Save</button>
+  </div>
+
+  <script>
+    // Portfolio skills data
+    const portfolioSkills = [
+      'HTML', 'CSS', 'JavaScript', 'Python', 'Java', 'C++',
+      'Django', 'SQL', 'Git', 'Excel', 'Tableau', 'Power BI'
+    ];
+
+    function displayPortfolioSkills() {
+      const skillsContainer = document.getElementById('skills-container');
+
+      // Clear existing content
+      skillsContainer.innerHTML = '';
+
+      // Create portfolio skills section
+      const portfolioSection = document.createElement('div');
+      portfolioSection.className = 'mb-4';
+      portfolioSection.innerHTML = `
+        <h4>Current Portfolio Skills</h4>
+        <div class="portfolio-skills-list"></div>
+      `;
+
+      const skillsList = portfolioSection.querySelector('.portfolio-skills-list');
+
+      // Display portfolio skills in card format
+      portfolioSkills.forEach((skill, index) => {
+        const skillCard = document.createElement('div');
+        skillCard.className = 'skill-card border rounded p-3 mb-3';
+        skillCard.innerHTML = `
+          <div class="skill-body mt-2">
+            <div class="mb-2">
+              <label class="form-label fw-bold">Skill Name</label>
+              <div class="border rounded p-2 bg-light">${skill}</div>
+            </div>
+          </div>
+          <div class="skill-footer mt-2 d-flex justify-content-start">
+            <button class="btn btn-warning btn-sm me-2" onclick="editSkill('${skill}', ${index})">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="removeSkillCard(this, '${skill}')">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>
+        `;
+        skillsList.appendChild(skillCard);
+      });
+
+      skillsContainer.appendChild(portfolioSection);
+    }
+
+    function addToEditor(skillName) {
+      const skillInput = document.getElementById('new-skill');
+      skillInput.value = skillName;
+      skillInput.focus();
+
+      // Show confirmation
+      const notification = document.createElement('div');
+      notification.className = 'alert alert-success mt-2';
+      notification.textContent = `"${skillName}" added to editor!`;
+      notification.style.position = 'fixed';
+      notification.style.top = '20px';
+      notification.style.right = '20px';
+      notification.style.zIndex = '1000';
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 3000);
+
+      console.log('Added to editor:', skillName);
+    }
+
+    function addSkill() {
+      const skillInput = document.getElementById('new-skill');
+      const skillsContainer = document.getElementById('skills-container');
+
+      if (skillInput.value.trim() !== '') {
+        // Access and log all form field data as name-value pairs
+        const formData = {
+          'skill-name': skillInput.value.trim()
+        };
+
+        console.log('=== Form Submission Data (Skills Section) ===');
+        Object.entries(formData).forEach(([fieldName, fieldValue]) => {
+          console.log(`${fieldName}: "${fieldValue}"`);
+        });
+        console.log('=== End Form Data Log ===');
+
+        // Create skill element
+        const skillElement = document.createElement('div');
+        skillElement.className = 'skill-item border rounded p-2 mb-2';
+        skillElement.innerHTML = `
+          <span>${skillInput.value}</span>
+          <button class="btn btn-danger btn-sm ms-2" onclick="removeSkill(this)">Remove</button>
+        `;
+
+        // Add to container
+        skillsContainer.appendChild(skillElement);
+
+        // Clear input
+        skillInput.value = '';
+
+        console.log('Skill added:', skillInput.value);
+      }
+    }
+
+    function removeSkill(button) {
+      const skillElement = button.parentElement;
+      const skillName = skillElement.querySelector('span').textContent;
+      skillElement.remove();
+      console.log('Skill removed:', skillName);
+    }
+
+    function removeSkillCard(button, skillName) {
+      const skillCard = button.closest('.skill-card');
+      skillCard.remove();
+      console.log('Portfolio skill removed:', skillName);
+    }
+
+    function editSkill(skillName, index) {
+      const skillInput = document.getElementById('new-skill');
+      skillInput.value = skillName;
+      skillInput.focus();
+
+      // Show notification
+      const notification = document.createElement('div');
+      notification.className = 'alert alert-info mt-2';
+      notification.textContent = `Editing "${skillName}" - make your changes and add the updated skill`;
+      notification.style.position = 'fixed';
+      notification.style.top = '20px';
+      notification.style.right = '20px';
+      notification.style.zIndex = '1000';
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification);
+        }
+      }, 5000);
+
+      console.log('Editing skill:', skillName);
+    }
+
+    // Allow Enter key to add skill
+    document.getElementById('new-skill').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        addSkill();
+      }
+    });
+
+    // Display portfolio skills on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      displayPortfolioSkills();
+    });
+  </script>
+
+
+
+
+</body>
+</html>

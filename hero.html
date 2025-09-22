@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Portfolio - Hero</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Edit Portfolio Sections</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="hero.html">Hero</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">Education</a></li>
+          <li class="nav-item"><a class="nav-link" href="skills.html">Skills</a></li>
+          <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h3>Hero Section</h3>
+    <div class="border p-3 mt-3 hero-item">
+      <div class="mb-3">
+        <label class="form-label">Name/Title</label>
+        <input type="text" class="form-control hero-name" readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Job Title</label>
+        <input type="text" class="form-control hero-title" readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-control hero-desc" readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Profile Image URL</label>
+        <input type="text" class="form-control hero-image" readonly>
+      </div>
+      <div class="mb-2">
+        <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-sm mt-3" onclick="saveHero()">Save</button>
+  </div>
+
+  <script>
+    // Load existing hero data from localStorage
+    function loadHero() {
+      const hero = JSON.parse(localStorage.getItem('hero')) || {};
+
+      if (Object.keys(hero).length === 0) {
+        // Load default hero data if none exist in localStorage
+        const defaultHero = {
+          name: "Hi, Yedunandan Nambiar Here!",
+          title: "Data Analyst",
+          desc: "Welcome to My Portfolio",
+          image: "images/yedu-portfolio.jpg"
+        };
+        localStorage.setItem('hero', JSON.stringify(defaultHero));
+        displayHero(defaultHero, false);
+      } else {
+        displayHero(hero, true);
+      }
+    }
+
+    // Display hero data in the admin panel
+    function displayHero(hero, isEditable) {
+      const nameInput = document.querySelector('.hero-name');
+      const titleInput = document.querySelector('.hero-title');
+      const descInput = document.querySelector('.hero-desc');
+      const imageInput = document.querySelector('.hero-image');
+
+      nameInput.value = hero.name || '';
+      titleInput.value = hero.title || '';
+      descInput.value = hero.desc || '';
+      imageInput.value = hero.image || '';
+
+      // Set readonly state
+      const inputs = document.querySelectorAll('.hero-item input');
+      inputs.forEach(input => {
+        input.readonly = !isEditable;
+      });
+    }
+
+    // Toggle edit mode for hero
+    function toggleEdit(button) {
+      const heroItem = button.closest('.hero-item');
+      const inputs = heroItem.querySelectorAll('input');
+      const isReadonly = inputs[0].hasAttribute('readonly');
+
+      if (isReadonly) {
+        // Enter edit mode
+        inputs.forEach(input => input.removeAttribute('readonly'));
+        button.textContent = 'Save';
+        button.className = 'btn btn-sm btn-warning';
+      } else {
+        // Save changes
+        inputs.forEach(input => input.setAttribute('readonly', 'readonly'));
+        button.textContent = 'Edit';
+        button.className = 'btn btn-sm btn-info';
+        saveHero();
+      }
+    }
+
+    // Save hero data
+    function saveHero() {
+      const hero = {
+        name: document.querySelector('.hero-name').value.trim(),
+        title: document.querySelector('.hero-title').value.trim(),
+        desc: document.querySelector('.hero-desc').value.trim(),
+        image: document.querySelector('.hero-image').value.trim()
+      };
+
+      localStorage.setItem('hero', JSON.stringify(hero));
+      alert("Hero section saved successfully!");
+
+      // Refresh the display
+      loadHero();
+    }
+
+    // Load hero data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadHero();
+    });
+  </script>
+</body>
+</html>

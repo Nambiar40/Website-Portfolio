@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Portfolio - About</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Edit Portfolio Sections</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="hero.html">Hero</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="education.html">Education</a></li>
+          <li class="nav-item"><a class="nav-link" href="skills.html">Skills</a></li>
+          <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h3>About Me</h3>
+    <div class="border p-3 mt-3 about-item">
+      <div class="mb-3">
+        <label class="form-label">About Text</label>
+        <textarea class="form-control about-text" rows="8" readonly></textarea>
+      </div>
+      <div class="mb-2">
+        <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-sm mt-3" onclick="saveAbout()">Save</button>
+  </div>
+
+  <script>
+    // Load existing about data from localStorage
+    function loadAbout() {
+      const about = localStorage.getItem('about') || '';
+
+      if (!about) {
+        // Load default about text if none exists in localStorage
+        const defaultAbout = "I am a passionate Data Analyst with a strong interest in transforming raw data into actionable insights. I specialize in data visualization, statistical analysis, and solving real-world problems using tools like SQL, Python, and Excel. With a detail-oriented mindset, I enjoy uncovering patterns and trends that help businesses make informed decisions. I'm constantly learning new techniques to enhance my analytical skills and contribute to impactful projects. My goal is to use data-driven strategies to create value and support growth.";
+        localStorage.setItem('about', defaultAbout);
+        displayAbout(defaultAbout, false);
+      } else {
+        displayAbout(about, true);
+      }
+    }
+
+    // Display about text in the admin panel
+    function displayAbout(aboutText, isEditable) {
+      const textarea = document.querySelector('.about-text');
+      textarea.value = aboutText;
+
+      // Set readonly state
+      textarea.readonly = !isEditable;
+    }
+
+    // Toggle edit mode for about
+    function toggleEdit(button) {
+      const aboutItem = button.closest('.about-item');
+      const textarea = aboutItem.querySelector('.about-text');
+      const isReadonly = textarea.hasAttribute('readonly');
+
+      if (isReadonly) {
+        // Enter edit mode
+        textarea.removeAttribute('readonly');
+        button.textContent = 'Save';
+        button.className = 'btn btn-sm btn-warning';
+      } else {
+        // Save changes
+        textarea.setAttribute('readonly', 'readonly');
+        button.textContent = 'Edit';
+        button.className = 'btn btn-sm btn-info';
+        saveAbout();
+      }
+    }
+
+    // Save about data
+    function saveAbout() {
+      const aboutText = document.querySelector('.about-text').value.trim();
+
+      localStorage.setItem('about', aboutText);
+      alert("About section saved successfully!");
+
+      // Refresh the display
+      loadAbout();
+    }
+
+    // Load about data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAbout();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Portfolio - Education</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Edit Portfolio Sections</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="hero.html">Hero</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link active" href="education.html">Education</a></li>
+          <li class="nav-item"><a class="nav-link" href="skills.html">Skills</a></li>
+          <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+  <!-- Education Section -->
+  <div class="mt-4">
+    <h3>Education</h3>
+
+    <div id="education-list">
+      <!-- Existing Education Items will appear here -->
+    </div>
+
+    <div class="mt-2">
+      <button class="btn btn-warning btn-sm" id="edit-education">Edit</button>
+      <button class="btn btn-secondary btn-sm" id="add-education">Add Education</button>
+      <button class="btn btn-primary btn-sm" id="save-education">Save Education</button>
+    </div>
+  </div>
+
+  <script>
+    // Load existing education from localStorage
+    function loadEducation() {
+      const education = JSON.parse(localStorage.getItem('education')) || [];
+      const container = document.getElementById("education-list");
+      container.innerHTML = '';
+
+      if (education.length === 0) {
+        // Load default education if none exist in localStorage
+        const defaultEducation = [
+          {
+            degree: "B.Tech Information Technology",
+            institution: "Marwadi University",
+            year: "2023 - 2027",
+            result: "8.00 CGPA"
+          },
+          {
+            degree: "12th Grade [CBSE]",
+            institution: "Chinmaya Vidyalaya Kannur",
+            year: "2023",
+            result: "75%"
+          },
+          {
+            degree: "10th Grade [CBSE]",
+            institution: "Kendriya Vidyalaya",
+            year: "2021",
+            result: "85%"
+          }
+        ];
+        localStorage.setItem('education', JSON.stringify(defaultEducation));
+        defaultEducation.forEach(edu => displayEducation(edu, false));
+      } else {
+        education.forEach(edu => displayEducation(edu, true));
+      }
+    }
+
+    // Display an education item in the admin panel
+    function displayEducation(edu, isEditable) {
+      const container = document.getElementById("education-list");
+      const div = document.createElement("div");
+      div.classList.add("border", "p-3", "mt-3", "education-item");
+      div.dataset.degree = edu.degree;
+
+      div.innerHTML = `
+        <div class="mb-2">
+          <label class="form-label">Degree/Program</label>
+          <input type="text" class="form-control education-degree" value="${edu.degree}" ${isEditable ? '' : 'readonly'}>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Institution</label>
+          <input type="text" class="form-control education-institution" value="${edu.institution}" ${isEditable ? '' : 'readonly'}>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Year</label>
+          <input type="text" class="form-control education-year" value="${edu.year}" ${isEditable ? '' : 'readonly'}>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Result/Grade</label>
+          <input type="text" class="form-control education-result" value="${edu.result}" ${isEditable ? '' : 'readonly'}>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm ${isEditable ? 'btn-warning' : 'btn-info'}" onclick="toggleEdit(this)">${isEditable ? 'Edit' : 'Save'}</button>
+          ${isEditable ? '<button class="btn btn-sm btn-danger ms-2" onclick="removeEducation(this)">Remove</button>' : ''}
+        </div>
+      `;
+
+      container.appendChild(div);
+    }
+
+    // Toggle edit mode for an education item
+    function toggleEdit(button) {
+      const educationItem = button.closest('.education-item');
+      const inputs = educationItem.querySelectorAll('input');
+      const isReadonly = inputs[0].hasAttribute('readonly');
+
+      if (isReadonly) {
+        // Enter edit mode
+        inputs.forEach(input => input.removeAttribute('readonly'));
+        button.textContent = 'Save';
+        button.className = 'btn btn-sm btn-warning';
+      } else {
+        // Save changes
+        inputs.forEach(input => input.setAttribute('readonly', 'readonly'));
+        button.textContent = 'Edit';
+        button.className = 'btn btn-sm btn-info';
+        saveEducation();
+      }
+    }
+
+    // Add new education
+    function addEducation() {
+      const container = document.getElementById("education-list");
+      const div = document.createElement("div");
+      div.classList.add("border", "p-3", "mt-3", "education-item");
+
+      div.innerHTML = `
+        <div class="mb-2">
+          <label class="form-label">Degree/Program</label>
+          <input type="text" class="form-control education-degree" placeholder="Enter degree/program">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Institution</label>
+          <input type="text" class="form-control education-institution" placeholder="Enter institution">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Year</label>
+          <input type="text" class="form-control education-year" placeholder="Enter year">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Result/Grade</label>
+          <input type="text" class="form-control education-result" placeholder="Enter result/grade">
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm btn-success" onclick="saveNewEducation(this)">Save New</button>
+          <button class="btn btn-sm btn-danger" onclick="cancelNewEducation(this)">Cancel</button>
+        </div>
+      `;
+
+      container.appendChild(div);
+    }
+
+    // Save new education
+    function saveNewEducation(button) {
+      const educationItem = button.closest('.education-item');
+      const degreeInput = educationItem.querySelector('.education-degree');
+      const institutionInput = educationItem.querySelector('.education-institution');
+      const yearInput = educationItem.querySelector('.education-year');
+      const resultInput = educationItem.querySelector('.education-result');
+
+      const degree = degreeInput.value.trim();
+      const institution = institutionInput.value.trim();
+      const year = yearInput.value.trim();
+      const result = resultInput.value.trim();
+
+      if (!degree || !institution || !year || !result) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      // Add to localStorage
+      const education = JSON.parse(localStorage.getItem('education')) || [];
+      education.push({ degree, institution, year, result });
+      localStorage.setItem('education', JSON.stringify(education));
+
+      // Refresh the display
+      loadEducation();
+    }
+
+    // Cancel new education
+    function cancelNewEducation(button) {
+      const educationItem = button.closest('.education-item');
+      educationItem.remove();
+    }
+
+    // Remove education item
+    function removeEducation(button) {
+      if (confirm('Are you sure you want to remove this education entry?')) {
+        const educationItem = button.closest('.education-item');
+        const degree = educationItem.dataset.degree;
+
+        // Remove from localStorage
+        const education = JSON.parse(localStorage.getItem('education')) || [];
+        const updatedEducation = education.filter(edu => edu.degree !== degree);
+        localStorage.setItem('education', JSON.stringify(updatedEducation));
+
+        // Remove from DOM
+        educationItem.remove();
+
+        alert('Education entry removed successfully!');
+      }
+    }
+
+    // Save all education
+    function saveEducation() {
+      const education = [];
+      const educationItems = document.querySelectorAll('.education-item');
+
+      educationItems.forEach(item => {
+        const degree = item.querySelector('.education-degree').value.trim();
+        const institution = item.querySelector('.education-institution').value.trim();
+        const year = item.querySelector('.education-year').value.trim();
+        const result = item.querySelector('.education-result').value.trim();
+
+        if (degree && institution && year && result) {
+          education.push({ degree, institution, year, result });
+        }
+      });
+
+      localStorage.setItem('education', JSON.stringify(education));
+      alert("Education saved successfully!");
+
+      // Refresh the display
+      loadEducation();
+    }
+
+    // Load education when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadEducation();
+    });
+
+    // Event listeners
+    document.getElementById('edit-education').addEventListener('click', () => {
+      document.querySelectorAll('.education-item input').forEach(input => input.removeAttribute('readonly'));
+      document.querySelectorAll('.education-item .btn-info').forEach(btn => {
+        btn.textContent = 'Save';
+        btn.className = 'btn btn-sm btn-warning';
+      });
+    });
+
+    document.getElementById('add-education').addEventListener('click', addEducation);
+
+    document.getElementById('save-education').addEventListener('click', saveEducation);
+  </script>
+</body>
+</html>
