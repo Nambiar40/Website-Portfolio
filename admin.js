@@ -31,10 +31,25 @@ function isUsernameAvailable(username) {
 // Login function
 function login(username, password) {
     const users = getUsers();
-    return users.some(user =>
+    const isValid = users.some(user =>
         user.username.toLowerCase() === username.toLowerCase() &&
         user.password === password
     );
+    if (isValid) {
+        localStorage.setItem('loggedIn', 'true');
+    }
+    return isValid;
+}
+
+// Check if user is logged in
+function isLoggedIn() {
+    return localStorage.getItem('loggedIn') === 'true';
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem('loggedIn');
+    window.location.href = 'login.html';
 }
 
 // Signup function
