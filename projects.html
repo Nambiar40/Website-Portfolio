@@ -27,119 +27,119 @@
 
   <div class="container mt-4">
     <h3>Projects</h3>
-    <div id="project-list"></div>
+    <div id="project-list">
+      <div class="border p-3 mt-3 project-item">
+        <div class="mb-2">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control project-title" value="Website Locker" readonly>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Description</label>
+          <textarea class="form-control project-desc" readonly>A Chrome Extension + Django project designed to lock access to websites (like Gmail) until the user successfully authenticates.</textarea>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+        </div>
+      </div>
+      <div class="border p-3 mt-3 project-item">
+        <div class="mb-2">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control project-title" value="E-Commerce Website" readonly>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Description</label>
+          <textarea class="form-control project-desc" readonly>A Django-powered online shopping platform with product listings, cart, and secure checkout.</textarea>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+        </div>
+      </div>
+      <div class="border p-3 mt-3 project-item">
+        <div class="mb-2">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control project-title" value="Tatkal Ticket Auto-booker" readonly>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Description</label>
+          <textarea class="form-control project-desc" readonly>An automation system for booking IRCTC Tatkal tickets using Python, Django, and Selenium.</textarea>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+        </div>
+      </div>
+      <div class="border p-3 mt-3 project-item">
+        <div class="mb-2">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control project-title" value="Chat Application" readonly>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Description</label>
+          <textarea class="form-control project-desc" readonly>A real-time chat app built with Django Channels and WebSockets.</textarea>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+        </div>
+      </div>
+    </div>
 
     <button class="btn btn-secondary mt-3" onclick="addProject()">Add Project</button>
     <button class="btn btn-primary btn-sm mt-3" onclick="saveProject()">Save</button>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Load existing projects from localStorage
-    function loadProjects() {
-      const projects = JSON.parse(localStorage.getItem('projects')) || [];
-      const container = document.getElementById("project-list");
-      container.innerHTML = '';
-
-      if (projects.length === 0) {
-        // Load default projects if none exist in localStorage
-        const defaultProjects = [
-          {
-            title: "Website Locker",
-            desc: "A Chrome Extension + Django project designed to lock access to websites (like Gmail) until the user successfully authenticates."
-          },
-          {
-            title: "E-Commerce Website",
-            desc: "A Django-powered online shopping platform with product listings, cart, and secure checkout."
-          },
-          {
-            title: "Tatkal Ticket Auto-booker",
-            desc: "An automation system for booking IRCTC Tatkal tickets using Python, Django, and Selenium."
-          },
-          {
-            title: "Chat Application",
-            desc: "A real-time chat app built with Django Channels and WebSockets."
-          }
-        ];
-        localStorage.setItem('projects', JSON.stringify(defaultProjects));
-        defaultProjects.forEach(project => displayProject(project, false));
-      } else {
-        projects.forEach(project => displayProject(project, true));
-      }
-    }
-
-    // Display a project in the admin panel
-    function displayProject(project, isEditable) {
-      const container = document.getElementById("project-list");
-      const div = document.createElement("div");
-      div.classList.add("border", "p-3", "mt-3", "project-item");
-      div.dataset.title = project.title;
-
-      div.innerHTML = `
-        <div class="mb-2">
-          <label class="form-label">Project Name</label>
-          <input type="text" class="form-control project-title" value="${project.title}" ${isEditable ? '' : 'readonly'}>
-        </div>
-        <div class="mb-2">
-          <label class="form-label">Description</label>
-          <textarea class="form-control project-desc" ${isEditable ? '' : 'readonly'}>${project.desc}</textarea>
-        </div>
-        <div class="mb-2">
-          <button class="btn btn-sm ${isEditable ? 'btn-warning' : 'btn-info'}" onclick="toggleEdit(this)">${isEditable ? 'Edit' : 'Save'}</button>
-          ${isEditable ? '<button class="btn btn-sm btn-danger ms-2" onclick="removeProject(this)">Remove</button>' : ''}
-        </div>
-      `;
-
-      container.appendChild(div);
-    }
-
-    // Toggle edit mode for a project
+    // Toggle edit mode for project section
     function toggleEdit(button) {
       const projectItem = button.closest('.project-item');
-      const titleInput = projectItem.querySelector('.project-title');
-      const descTextarea = projectItem.querySelector('.project-desc');
-      const isReadonly = titleInput.hasAttribute('readonly');
+      const inputs = projectItem.querySelectorAll('input, textarea');
 
-      if (isReadonly) {
-        // Enter edit mode
-        titleInput.removeAttribute('readonly');
-        descTextarea.removeAttribute('readonly');
-        button.textContent = 'Save';
-        button.className = 'btn btn-sm btn-warning';
-      } else {
-        // Save changes
-        titleInput.setAttribute('readonly', 'readonly');
-        descTextarea.setAttribute('readonly', 'readonly');
-        button.textContent = 'Edit';
-        button.className = 'btn btn-sm btn-info';
-        saveProject();
-      }
+      inputs.forEach(input => {
+        if (input.hasAttribute('readonly')) {
+          input.removeAttribute('readonly');
+        } else {
+          input.setAttribute('readonly', 'readonly');
+        }
+      });
+
+      button.textContent = button.textContent === 'Edit' ? 'Save' : 'Edit';
     }
 
-    // Add new project
-    function addProject() {
-      const container = document.getElementById("project-list");
-      const div = document.createElement("div");
-      div.classList.add("border", "p-3", "mt-3", "project-item");
+    // Real-time validation for project inputs
+    document.addEventListener('DOMContentLoaded', function() {
+      const projectItems = document.querySelectorAll('.project-item');
 
-      div.innerHTML = `
-        <div class="mb-2">
-          <label class="form-label">Project Name</label>
-          <input type="text" class="form-control project-title" placeholder="Enter project name">
-        </div>
-        <div class="mb-2">
-          <label class="form-label">Description</label>
-          <textarea class="form-control project-desc" placeholder="Enter project description"></textarea>
-        </div>
-        <div class="mb-2">
-          <button class="btn btn-sm btn-success" onclick="saveNewProject(this)">Save New</button>
-          <button class="btn btn-sm btn-danger" onclick="cancelNewProject(this)">Cancel</button>
-        </div>
-      `;
+      projectItems.forEach(item => {
+        const titleInput = item.querySelector('.project-title');
+        const descTextarea = item.querySelector('.project-desc');
 
-      container.appendChild(div);
-    }
+        function validateInput(input) {
+          // Remove existing error message
+          const existingError = input.parentNode.querySelector('.error-message');
+          if (existingError) {
+            existingError.remove();
+          }
 
-    // Save new project
+          if (input.value.trim() === '') {
+            input.style.borderColor = 'red';
+            // Create and insert error message
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'text-danger error-message';
+            errorSpan.textContent = 'This field is required';
+            input.parentNode.insertBefore(errorSpan, input.nextSibling);
+          } else {
+            input.style.borderColor = 'green';
+          }
+        }
+
+        titleInput.addEventListener('input', function() { validateInput(this); });
+        descTextarea.addEventListener('input', function() { validateInput(this); });
+
+        // Initial validation
+        validateInput(titleInput);
+        validateInput(descTextarea);
+      });
+    });
+
     function saveNewProject(button) {
       const projectItem = button.closest('.project-item');
       const titleInput = projectItem.querySelector('.project-title');
@@ -152,65 +152,7 @@
         alert('Please fill in both project name and description');
         return;
       }
-
-      // Add to localStorage
-      const projects = JSON.parse(localStorage.getItem('projects')) || [];
-      projects.push({ title, desc });
-      localStorage.setItem('projects', JSON.stringify(projects));
-
-      // Refresh the display
-      loadProjects();
     }
-
-    // Cancel new project
-    function cancelNewProject(button) {
-      const projectItem = button.closest('.project-item');
-      projectItem.remove();
-    }
-
-    // Save all projects
-    function saveProject() {
-      const projects = [];
-      const projectItems = document.querySelectorAll('.project-item');
-
-      projectItems.forEach(item => {
-        const title = item.querySelector('.project-title').value.trim();
-        const desc = item.querySelector('.project-desc').value.trim();
-
-        if (title && desc) {
-          projects.push({ title, desc });
-        }
-      });
-
-      localStorage.setItem('projects', JSON.stringify(projects));
-      alert("Projects saved successfully!");
-
-      // Refresh the display
-      loadProjects();
-    }
-
-    // Remove project
-    function removeProject(button) {
-      if (confirm('Are you sure you want to remove this project?')) {
-        const projectItem = button.closest('.project-item');
-        const title = projectItem.dataset.title;
-
-        // Remove from localStorage
-        const projects = JSON.parse(localStorage.getItem('projects')) || [];
-        const updatedProjects = projects.filter(project => project.title !== title);
-        localStorage.setItem('projects', JSON.stringify(updatedProjects));
-
-        // Remove from DOM
-        projectItem.remove();
-
-        alert('Project removed successfully!');
-      }
-    }
-
-    // Load projects when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      loadProjects();
-    });
   </script>
 </body>
 </html>

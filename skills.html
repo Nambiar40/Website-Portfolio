@@ -27,171 +27,201 @@
 
   <div class="container mt-4">
     <h3>Skills</h3>
-    <div id="skills-container"></div>
+    <div id="skills-container">
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">HTML</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">CSS</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">JavaScript</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Python</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Java</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">C++</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Django</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">SQL</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Git</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Excel</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Tableau</div>
+        </div>
+      </div>
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <label class="form-label fw-bold">Skill Name</label>
+          <div class="border rounded p-2 bg-light">Power BI</div>
+        </div>
+      </div>
+    </div>
 
     <div class="mt-3">
       <input type="text" id="new-skill" class="form-control" placeholder="Enter new skill">
       <button class="btn btn-secondary mt-2" onclick="addSkill()">Add Skill</button>
     </div>
-    <button class="btn btn-warning btn-sm mt-3" onclick="editSkills()">Edit</button>
-    <button class="btn btn-primary btn-sm mt-3" onclick="saveSkills()">Save</button>
+    <button class="btn btn-warning btn-sm mt-3" id="edit-skills-btn" onclick="editSkills()">Edit</button>
+    <button class="btn btn-primary btn-sm mt-3" id="save-skills-btn" onclick="saveSkills()" style="display: none;">Save</button>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Portfolio skills data
-    const portfolioSkills = [
-      'HTML', 'CSS', 'JavaScript', 'Python', 'Java', 'C++',
-      'Django', 'SQL', 'Git', 'Excel', 'Tableau', 'Power BI'
-    ];
+    // Global validation function for skill inputs
+    function validateSkillInput(input) {
+      // Remove existing error message
+      const existingError = input.parentNode.querySelector('.error-message');
+      if (existingError) {
+        existingError.remove();
+      }
 
-    function displayPortfolioSkills() {
-      const skillsContainer = document.getElementById('skills-container');
-
-      // Clear existing content
-      skillsContainer.innerHTML = '';
-
-      // Create portfolio skills section
-      const portfolioSection = document.createElement('div');
-      portfolioSection.className = 'mb-4';
-      portfolioSection.innerHTML = `
-        <h4>Current Portfolio Skills</h4>
-        <div class="portfolio-skills-list"></div>
-      `;
-
-      const skillsList = portfolioSection.querySelector('.portfolio-skills-list');
-
-      // Display portfolio skills in card format
-      portfolioSkills.forEach((skill, index) => {
-        const skillCard = document.createElement('div');
-        skillCard.className = 'skill-card border rounded p-3 mb-3';
-        skillCard.innerHTML = `
-          <div class="skill-body mt-2">
-            <div class="mb-2">
-              <label class="form-label fw-bold">Skill Name</label>
-              <div class="border rounded p-2 bg-light">${skill}</div>
-            </div>
-          </div>
-          <div class="skill-footer mt-2 d-flex justify-content-start">
-            <button class="btn btn-warning btn-sm me-2" onclick="editSkill('${skill}', ${index})">
-              <i class="fas fa-edit"></i> Edit
-            </button>
-            <button class="btn btn-danger btn-sm" onclick="removeSkillCard(this, '${skill}')">
-              <i class="fas fa-trash"></i> Remove
-            </button>
-          </div>
-        `;
-        skillsList.appendChild(skillCard);
-      });
-
-      skillsContainer.appendChild(portfolioSection);
+      if (input.value.trim() === '') {
+        input.style.borderColor = 'red';
+        // Create and insert error message
+        const errorSpan = document.createElement('span');
+        errorSpan.className = 'text-danger error-message';
+        errorSpan.textContent = 'This field is required';
+        input.parentNode.insertBefore(errorSpan, input.nextSibling);
+      } else {
+        input.style.borderColor = 'green';
+      }
     }
 
-    function addToEditor(skillName) {
+    // Real-time validation for new skill input
+    document.addEventListener('DOMContentLoaded', function() {
       const skillInput = document.getElementById('new-skill');
-      skillInput.value = skillName;
-      skillInput.focus();
 
-      // Show confirmation
-      const notification = document.createElement('div');
-      notification.className = 'alert alert-success mt-2';
-      notification.textContent = `"${skillName}" added to editor!`;
-      notification.style.position = 'fixed';
-      notification.style.top = '20px';
-      notification.style.right = '20px';
-      notification.style.zIndex = '1000';
+      skillInput.addEventListener('input', function() { validateSkillInput(this); });
 
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        document.body.removeChild(notification);
-      }, 3000);
-
-      console.log('Added to editor:', skillName);
-    }
+      // Initial validation
+      validateSkillInput(skillInput);
+    });
 
     function addSkill() {
       const skillInput = document.getElementById('new-skill');
-      const skillsContainer = document.getElementById('skills-container');
+
+      // Reset previous warnings
+      skillInput.style.borderColor = '';
+
+      // Remove existing error message
+      const existingError = skillInput.parentNode.querySelector('.error-message');
+      if (existingError) {
+        existingError.remove();
+      }
 
       if (skillInput.value.trim() !== '') {
-        // Access and log all form field data as name-value pairs
-        const formData = {
-          'skill-name': skillInput.value.trim()
-        };
-
-        console.log('=== Form Submission Data (Skills Section) ===');
-        Object.entries(formData).forEach(([fieldName, fieldValue]) => {
-          console.log(`${fieldName}: "${fieldValue}"`);
-        });
-        console.log('=== End Form Data Log ===');
-
-        // Create skill element
-        const skillElement = document.createElement('div');
-        skillElement.className = 'skill-item border rounded p-2 mb-2';
-        skillElement.innerHTML = `
-          <span>${skillInput.value}</span>
-          <button class="btn btn-danger btn-sm ms-2" onclick="removeSkill(this)">Remove</button>
+        // Skill is valid, add to list
+        const skillsContainer = document.getElementById('skills-container');
+        const newSkillDiv = document.createElement('div');
+        newSkillDiv.className = 'border rounded p-3 mb-3';
+        newSkillDiv.innerHTML = `
+          <div class="mb-2">
+            <label class="form-label fw-bold">Skill Name</label>
+            <div class="border rounded p-2 bg-light">${skillInput.value.trim()}</div>
+          </div>
         `;
-
-        // Add to container
-        skillsContainer.appendChild(skillElement);
-
-        // Clear input
+        skillsContainer.appendChild(newSkillDiv);
         skillInput.value = '';
-
-        console.log('Skill added:', skillInput.value);
+        alert("Skill added successfully!");
+      } else {
+        skillInput.style.borderColor = 'red';
+        // Create and insert error message
+        const errorSpan = document.createElement('span');
+        errorSpan.className = 'text-danger error-message';
+        errorSpan.textContent = 'This field is required';
+        skillInput.parentNode.insertBefore(errorSpan, skillInput.nextSibling);
+        alert("Please enter a skill name.");
       }
     }
 
-    function removeSkill(button) {
-      const skillElement = button.parentElement;
-      const skillName = skillElement.querySelector('span').textContent;
-      skillElement.remove();
-      console.log('Skill removed:', skillName);
+    function editSkills() {
+      const skillsContainer = document.getElementById('skills-container');
+      const skillDivs = skillsContainer.querySelectorAll('.border.rounded.p-3.mb-3');
+      const editBtn = document.getElementById('edit-skills-btn');
+      const saveBtn = document.getElementById('save-skills-btn');
+
+      skillDivs.forEach(div => {
+        const skillText = div.querySelector('.bg-light').textContent;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control';
+        input.value = skillText;
+        div.querySelector('.bg-light').replaceWith(input);
+
+        // Add validation event listener
+        input.addEventListener('input', function() { validateSkillInput(this); });
+        // Initial validation
+        validateSkillInput(input);
+      });
+
+      editBtn.style.display = 'none';
+      saveBtn.style.display = 'inline-block';
     }
 
-    function removeSkillCard(button, skillName) {
-      const skillCard = button.closest('.skill-card');
-      skillCard.remove();
-      console.log('Portfolio skill removed:', skillName);
+    function saveSkills() {
+      const skillsContainer = document.getElementById('skills-container');
+      const skillDivs = skillsContainer.querySelectorAll('.border.rounded.p-3.mb-3');
+      const editBtn = document.getElementById('edit-skills-btn');
+      const saveBtn = document.getElementById('save-skills-btn');
+
+      skillDivs.forEach(div => {
+        const input = div.querySelector('input');
+        const skillText = input.value.trim();
+        const displayDiv = document.createElement('div');
+        displayDiv.className = 'border rounded p-2 bg-light';
+        displayDiv.textContent = skillText;
+        input.replaceWith(displayDiv);
+      });
+
+      saveBtn.style.display = 'none';
+      editBtn.style.display = 'inline-block';
+      alert("Skills saved successfully!");
     }
-
-    function editSkill(skillName, index) {
-      const skillInput = document.getElementById('new-skill');
-      skillInput.value = skillName;
-      skillInput.focus();
-
-      // Show notification
-      const notification = document.createElement('div');
-      notification.className = 'alert alert-info mt-2';
-      notification.textContent = `Editing "${skillName}" - make your changes and add the updated skill`;
-      notification.style.position = 'fixed';
-      notification.style.top = '20px';
-      notification.style.right = '20px';
-      notification.style.zIndex = '1000';
-
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        if (document.body.contains(notification)) {
-          document.body.removeChild(notification);
-        }
-      }, 5000);
-
-      console.log('Editing skill:', skillName);
-    }
-
-    // Allow Enter key to add skill
-    document.getElementById('new-skill').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        addSkill();
-      }
-    });
-
-    // Display portfolio skills on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      displayPortfolioSkills();
-    });
   </script>
 
 

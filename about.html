@@ -30,7 +30,7 @@
     <div class="border p-3 mt-3 about-item">
       <div class="mb-3">
         <label class="form-label">About Text</label>
-        <textarea class="form-control about-text" rows="8" readonly></textarea>
+        <textarea class="form-control about-text" rows="8" readonly>I am a passionate Data Analyst with a strong interest in transforming raw data into actionable insights. I specialize in data visualization, statistical analysis, and solving real-world problems using tools like SQL, Python, and Excel. With a detail-oriented mindset, I enjoy uncovering patterns and trends that help businesses make informed decisions. I'm constantly learning new techniques to enhance my analytical skills and contribute to impactful projects. My goal is to use data-driven strategies to create value and support growth.</textarea>
       </div>
       <div class="mb-2">
         <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
@@ -40,64 +40,49 @@
     <button class="btn btn-primary btn-sm mt-3" onclick="saveAbout()">Save</button>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Load existing about data from localStorage
-    function loadAbout() {
-      const about = localStorage.getItem('about') || '';
-
-      if (!about) {
-        // Load default about text if none exists in localStorage
-        const defaultAbout = "I am a passionate Data Analyst with a strong interest in transforming raw data into actionable insights. I specialize in data visualization, statistical analysis, and solving real-world problems using tools like SQL, Python, and Excel. With a detail-oriented mindset, I enjoy uncovering patterns and trends that help businesses make informed decisions. I'm constantly learning new techniques to enhance my analytical skills and contribute to impactful projects. My goal is to use data-driven strategies to create value and support growth.";
-        localStorage.setItem('about', defaultAbout);
-        displayAbout(defaultAbout, false);
-      } else {
-        displayAbout(about, true);
-      }
-    }
-
-    // Display about text in the admin panel
-    function displayAbout(aboutText, isEditable) {
-      const textarea = document.querySelector('.about-text');
-      textarea.value = aboutText;
-
-      // Set readonly state
-      textarea.readonly = !isEditable;
-    }
-
-    // Toggle edit mode for about
+    // Toggle edit mode for about section
     function toggleEdit(button) {
       const aboutItem = button.closest('.about-item');
       const textarea = aboutItem.querySelector('.about-text');
-      const isReadonly = textarea.hasAttribute('readonly');
 
-      if (isReadonly) {
-        // Enter edit mode
+      if (textarea.hasAttribute('readonly')) {
         textarea.removeAttribute('readonly');
-        button.textContent = 'Save';
-        button.className = 'btn btn-sm btn-warning';
       } else {
-        // Save changes
         textarea.setAttribute('readonly', 'readonly');
-        button.textContent = 'Edit';
-        button.className = 'btn btn-sm btn-info';
-        saveAbout();
       }
+
+      button.textContent = button.textContent === 'Edit' ? 'Save' : 'Edit';
     }
 
-    // Save about data
-    function saveAbout() {
-      const aboutText = document.querySelector('.about-text').value.trim();
-
-      localStorage.setItem('about', aboutText);
-      alert("About section saved successfully!");
-
-      // Refresh the display
-      loadAbout();
-    }
-
-    // Load about data when page loads
+    // Real-time validation for about textarea
     document.addEventListener('DOMContentLoaded', function() {
-      loadAbout();
+      const aboutTextarea = document.querySelector('.about-text');
+
+      function validateTextarea() {
+        // Remove existing error message
+        const existingError = aboutTextarea.parentNode.querySelector('.error-message');
+        if (existingError) {
+          existingError.remove();
+        }
+
+        if (aboutTextarea.value.trim() === '') {
+          aboutTextarea.style.borderColor = 'red';
+          // Create and insert error message
+          const errorSpan = document.createElement('span');
+          errorSpan.className = 'text-danger error-message';
+          errorSpan.textContent = 'This field is required';
+          aboutTextarea.parentNode.insertBefore(errorSpan, aboutTextarea.nextSibling);
+        } else {
+          aboutTextarea.style.borderColor = 'green';
+        }
+      }
+
+      aboutTextarea.addEventListener('input', validateTextarea);
+
+      // Initial validation
+      validateTextarea();
     });
   </script>
 </body>

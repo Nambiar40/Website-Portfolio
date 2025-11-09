@@ -1,0 +1,5 @@
+Title,Description
+Website Locker,A Chrome Extension + Django project designed to lock access to websites (like Gmail) until the user successfully authenticates.
+E-Commerce Website,A Django-powered online shopping platform with product listings, cart, and secure checkout.
+Tatkal Ticket Auto-booker,An automation system for booking IRCTC Tatkal tickets using Python, Django, and Selenium.
+Chat Application,A real-time chat app built with Django Channels and WebSockets.

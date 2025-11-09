@@ -63,73 +63,88 @@
 
 
   <script>
-    // Toggle between login and signup modes
-    function toggleMode(mode) {
-      const loginForm = document.getElementById('login-form');
-      const signupForm = document.getElementById('signup-form');
-      const formTitle = document.getElementById('form-title');
-      const formSubtitle = document.getElementById('form-subtitle');
+    // Real-time validation for login inputs
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginUsernameInput = document.getElementById('login-username');
+      const loginPasswordInput = document.getElementById('login-password');
+      const signupUsernameInput = document.getElementById('signup-username');
+      const signupPasswordInput = document.getElementById('signup-password');
+      const signupConfirmPasswordInput = document.getElementById('signup-confirm-password');
 
-      if (mode === 'signup') {
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'block';
-        formTitle.textContent = 'Create Account';
-        formSubtitle.textContent = 'Sign up to create your admin account';
-      } else {
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-        formTitle.textContent = 'Admin Login';
-        formSubtitle.textContent = 'Sign in to access your admin panel';
+      function validateInput(input) {
+        // Remove existing error message
+        const existingError = input.parentNode.querySelector('.error-message');
+        if (existingError) {
+          existingError.remove();
+        }
+
+        if (input.value.trim() === '') {
+          input.style.borderColor = 'red';
+          // Create and insert error message
+          const errorSpan = document.createElement('span');
+          errorSpan.className = 'text-danger error-message';
+          errorSpan.textContent = 'This field is required';
+          input.parentNode.insertBefore(errorSpan, input.nextSibling);
+        } else {
+          input.style.borderColor = 'green';
+        }
       }
-    }
+
+      // Login inputs
+      loginUsernameInput.addEventListener('input', function() { validateInput(this); });
+      loginPasswordInput.addEventListener('input', function() { validateInput(this); });
+
+      // Signup inputs
+      signupUsernameInput.addEventListener('input', function() { validateInput(this); });
+      signupPasswordInput.addEventListener('input', function() { validateInput(this); });
+      signupConfirmPasswordInput.addEventListener('input', function() { validateInput(this); });
+
+      // Initial validation
+      validateInput(loginUsernameInput);
+      validateInput(loginPasswordInput);
+      validateInput(signupUsernameInput);
+      validateInput(signupPasswordInput);
+      validateInput(signupConfirmPasswordInput);
+    });
 
     // Login form submission
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
+      const usernameInput = document.getElementById('login-username');
+      const passwordInput = document.getElementById('login-password');
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      // Reset previous warnings
+      usernameInput.style.borderColor = '';
+      passwordInput.style.borderColor = '';
+
+      let valid = true;
+
+      if (!username) {
+        usernameInput.style.borderColor = 'red';
+        valid = false;
+      }
+      if (!password) {
+        passwordInput.style.borderColor = 'red';
+        valid = false;
+      }
+
+      if (!valid) {
+        alert("Please enter both username and password.");
+        return;
+      }
 
        // Call the login function from admin.js
   if (window.login && typeof window.login === 'function' && window.login(username, password)) {
-    
+
     window.location.href = 'hero.html'; // or 'index.html#hero' if it's a section on the same page
   } else {
     alert('Invalid credentials. Please try again.');
   }
 });
-    // Sign up form submission
-    document.getElementById('signup-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const username = document.getElementById('signup-username').value;
-      const password = document.getElementById('signup-password').value;
-      const confirmPassword = document.getElementById('signup-confirm-password').value;
-
-      // Validate passwords match
-      if (password !== confirmPassword) {
-        document.getElementById('password-feedback').textContent = 'Passwords do not match';
-        document.getElementById('password-feedback').style.color = 'red';
-        return;
-      }
-
-      // Call the signup function from admin.js
-      if (window.signup && typeof window.signup === 'function') {
-        const result = window.signup(username, password);
-        if (result.success) {
-          alert('Account created successfully! You can now login.');
-          toggleMode('login');
-          // Clear signup form
-          document.getElementById('signup-username').value = '';
-          document.getElementById('signup-password').value = '';
-          document.getElementById('signup-confirm-password').value = '';
-        } else {
-          alert(result.message || 'Failed to create account. Please try again.');
-        }
-      } else {
-        alert('Signup function not available. Please refresh the page.');
-      }
-    });
 
     // Real-time username validation
     document.getElementById('signup-username').addEventListener('input', function() {

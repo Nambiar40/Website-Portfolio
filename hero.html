@@ -30,19 +30,19 @@
     <div class="border p-3 mt-3 hero-item">
       <div class="mb-3">
         <label class="form-label">Name/Title</label>
-        <input type="text" class="form-control hero-name" readonly>
+        <input type="text" class="form-control hero-name" value="Hi, Yedunandan Nambiar Here!" readonly>
       </div>
       <div class="mb-3">
         <label class="form-label">Job Title</label>
-        <input type="text" class="form-control hero-title" readonly>
+        <input type="text" class="form-control hero-title" value="Data Analyst" readonly>
       </div>
       <div class="mb-3">
         <label class="form-label">Description</label>
-        <input type="text" class="form-control hero-desc" readonly>
+        <input type="text" class="form-control hero-desc" value="Welcome to My Portfolio" readonly>
       </div>
       <div class="mb-3">
         <label class="form-label">Profile Image URL</label>
-        <input type="text" class="form-control hero-image" readonly>
+        <input type="text" class="form-control hero-image" value="images/yedu-portfolio.jpg" readonly>
       </div>
       <div class="mb-2">
         <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
@@ -52,73 +52,105 @@
     <button class="btn btn-primary btn-sm mt-3" onclick="saveHero()">Save</button>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Load existing hero data from localStorage
-    function loadHero() {
-      const hero = JSON.parse(localStorage.getItem('hero')) || {};
+    // Toggle edit mode for hero section
+    function toggleEdit(button) {
+      const heroItem = button.closest('.hero-item');
+      const inputs = heroItem.querySelectorAll('input');
 
-      if (Object.keys(hero).length === 0) {
-        // Load default hero data if none exist in localStorage
-        const defaultHero = {
-          name: "Hi, Yedunandan Nambiar Here!",
-          title: "Data Analyst",
-          desc: "Welcome to My Portfolio",
-          image: "images/yedu-portfolio.jpg"
-        };
-        localStorage.setItem('hero', JSON.stringify(defaultHero));
-        displayHero(defaultHero, false);
-      } else {
-        displayHero(hero, true);
-      }
+      inputs.forEach(input => {
+        if (input.hasAttribute('readonly')) {
+          input.removeAttribute('readonly');
+        } else {
+          input.setAttribute('readonly', 'readonly');
+        }
+      });
+
+      button.textContent = button.textContent === 'Edit' ? 'Save' : 'Edit';
     }
 
-    // Display hero data in the admin panel
-    function displayHero(hero, isEditable) {
+    // Real-time validation for hero inputs
+    document.addEventListener('DOMContentLoaded', function() {
       const nameInput = document.querySelector('.hero-name');
       const titleInput = document.querySelector('.hero-title');
       const descInput = document.querySelector('.hero-desc');
       const imageInput = document.querySelector('.hero-image');
 
-      nameInput.value = hero.name || '';
-      titleInput.value = hero.title || '';
-      descInput.value = hero.desc || '';
-      imageInput.value = hero.image || '';
+      function validateInput(input) {
+        // Remove existing error message
+        const existingError = input.parentNode.querySelector('.error-message');
+        if (existingError) {
+          existingError.remove();
+        }
 
-      // Set readonly state
-      const inputs = document.querySelectorAll('.hero-item input');
-      inputs.forEach(input => {
-        input.readonly = !isEditable;
-      });
-    }
-
-    // Toggle edit mode for hero
-    function toggleEdit(button) {
-      const heroItem = button.closest('.hero-item');
-      const inputs = heroItem.querySelectorAll('input');
-      const isReadonly = inputs[0].hasAttribute('readonly');
-
-      if (isReadonly) {
-        // Enter edit mode
-        inputs.forEach(input => input.removeAttribute('readonly'));
-        button.textContent = 'Save';
-        button.className = 'btn btn-sm btn-warning';
-      } else {
-        // Save changes
-        inputs.forEach(input => input.setAttribute('readonly', 'readonly'));
-        button.textContent = 'Edit';
-        button.className = 'btn btn-sm btn-info';
-        saveHero();
+        if (input.value.trim() === '') {
+          input.style.borderColor = 'red';
+          // Create and insert error message
+          const errorSpan = document.createElement('span');
+          errorSpan.className = 'text-danger error-message';
+          errorSpan.textContent = 'This field is required';
+          input.parentNode.insertBefore(errorSpan, input.nextSibling);
+        } else {
+          input.style.borderColor = 'green';
+        }
       }
-    }
+
+      nameInput.addEventListener('input', function() { validateInput(this); });
+      titleInput.addEventListener('input', function() { validateInput(this); });
+      descInput.addEventListener('input', function() { validateInput(this); });
+      imageInput.addEventListener('input', function() { validateInput(this); });
+
+      // Initial validation
+      validateInput(nameInput);
+      validateInput(titleInput);
+      validateInput(descInput);
+      validateInput(imageInput);
+    });
 
     // Save hero data
     function saveHero() {
+      const nameInput = document.querySelector('.hero-name');
+      const titleInput = document.querySelector('.hero-title');
+      const descInput = document.querySelector('.hero-desc');
+      const imageInput = document.querySelector('.hero-image');
+
       const hero = {
-        name: document.querySelector('.hero-name').value.trim(),
-        title: document.querySelector('.hero-title').value.trim(),
-        desc: document.querySelector('.hero-desc').value.trim(),
-        image: document.querySelector('.hero-image').value.trim()
+        name: nameInput.value.trim(),
+        title: titleInput.value.trim(),
+        desc: descInput.value.trim(),
+        image: imageInput.value.trim()
       };
+
+      // Reset previous warnings
+      nameInput.style.borderColor = '';
+      titleInput.style.borderColor = '';
+      descInput.style.borderColor = '';
+      imageInput.style.borderColor = '';
+
+      let valid = true;
+
+      if (!hero.name) {
+        nameInput.style.borderColor = 'red';
+        valid = false;
+      }
+      if (!hero.title) {
+        titleInput.style.borderColor = 'red';
+        valid = false;
+      }
+      if (!hero.desc) {
+        descInput.style.borderColor = 'red';
+        valid = false;
+      }
+      if (!hero.image) {
+        imageInput.style.borderColor = 'red';
+        valid = false;
+      }
+
+      if (!valid) {
+        alert("Please fill in all fields: Name, Job Title, Description, and Profile Image URL.");
+        return;
+      }
 
       localStorage.setItem('hero', JSON.stringify(hero));
       alert("Hero section saved successfully!");
@@ -126,11 +158,6 @@
       // Refresh the display
       loadHero();
     }
-
-    // Load hero data when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      loadHero();
-    });
   </script>
 </body>
 </html>
