@@ -84,6 +84,38 @@
       // Initial validation
       validateTextarea();
     });
+
+    // Save about data
+    function saveAbout() {
+      const aboutTextarea = document.querySelector('.about-text');
+      const content = aboutTextarea.value.trim();
+
+      if (!content) {
+        alert("Please fill in the about text.");
+        return;
+      }
+
+      // Send data to server
+      fetch('save_about.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ content: content })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("About section saved successfully!");
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred while saving.");
+      });
+    }
   </script>
 </body>
 </html>

@@ -27,29 +27,28 @@
 
   <div class="container mt-4">
     <h3>Hero Section</h3>
-    <div class="border p-3 mt-3 hero-item">
+    <form id="heroForm" class="border p-3 mt-3 hero-item">
       <div class="mb-3">
         <label class="form-label">Name/Title</label>
-        <input type="text" class="form-control hero-name" value="Hi, Yedunandan Nambiar Here!" readonly>
+        <input type="text" name="name" class="form-control hero-name" value="Hi, Yedunandan Nambiar Here!" readonly>
       </div>
       <div class="mb-3">
         <label class="form-label">Job Title</label>
-        <input type="text" class="form-control hero-title" value="Data Analyst" readonly>
+        <input type="text" name="title" class="form-control hero-title" value="Data Analyst" readonly>
       </div>
       <div class="mb-3">
         <label class="form-label">Description</label>
-        <input type="text" class="form-control hero-desc" value="Welcome to My Portfolio" readonly>
+        <input type="text" name="description" class="form-control hero-desc" value="Welcome to My Portfolio" readonly>
       </div>
       <div class="mb-3">
         <label class="form-label">Profile Image URL</label>
-        <input type="text" class="form-control hero-image" value="images/yedu-portfolio.jpg" readonly>
+        <input type="text" name="image" class="form-control hero-image" value="images/yedu-portfolio.jpg" readonly>
       </div>
       <div class="mb-2">
-        <button class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
+        <button type="button" class="btn btn-sm btn-info" onclick="toggleEdit(this)">Edit</button>
       </div>
-    </div>
-
-    <button class="btn btn-primary btn-sm mt-3" onclick="saveHero()">Save</button>
+      <button type="submit" class="btn btn-primary btn-sm mt-3">Save</button>
+    </form>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -67,7 +66,8 @@
         }
       });
 
-      button.textContent = button.textContent === 'Edit' ? 'Save' : 'Edit';
+      // Toggle button text for clarity
+      button.textContent = button.textContent === 'Edit' ? 'Lock' : 'Edit';
     }
 
     // Real-time validation for hero inputs
@@ -106,6 +106,52 @@
       validateInput(titleInput);
       validateInput(descInput);
       validateInput(imageInput);
+
+      // Load hero data from database
+      fetch('load_hero.php')
+        .then(response => response.json())
+        .then(data => {
+          if (data.name) {
+            document.querySelector('.hero-name').value = data.name;
+            document.querySelector('.hero-title').value = data.title;
+            document.querySelector('.hero-desc').value = data.description;
+            document.querySelector('.hero-image').value = data.image;
+          }
+        })
+        .catch(error => console.error('Error loading hero:', error));
+
+      // Form submission handler
+      document.getElementById("heroForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        try {
+          const response = await fetch("save_hero.php", {
+            method: "POST",
+            body: formData
+          });
+
+          // Always try to parse JSON, but handle non-JSON responses gracefully
+          const text = await response.text();
+          let res;
+          try {
+            res = JSON.parse(text);
+          } catch(parseErr) {
+            console.error('Non-JSON response:', text);
+            alert('Server returned an unexpected response. Check console for details.');
+            return;
+          }
+
+          console.log("Server:", res);
+
+          alert(res.message);
+        }
+        catch(err){
+          console.error("Error:", err);
+          alert('An error occurred while saving. See console for details.');
+        }
+      });
     });
 
     // Save hero data
@@ -118,7 +164,7 @@
       const hero = {
         name: nameInput.value.trim(),
         title: titleInput.value.trim(),
-        desc: descInput.value.trim(),
+        description: descInput.value.trim(),
         image: imageInput.value.trim()
       };
 
@@ -138,7 +184,7 @@
         titleInput.style.borderColor = 'red';
         valid = false;
       }
-      if (!hero.desc) {
+      if (!hero.description) {
         descInput.style.borderColor = 'red';
         valid = false;
       }
@@ -152,11 +198,26 @@
         return;
       }
 
-      localStorage.setItem('hero', JSON.stringify(hero));
-      alert("Hero section saved successfully!");
-
-      // Refresh the display
-      loadHero();
+      // Send data to server
+      fetch('save_hero.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(hero)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while saving.');
+      });
     }
   </script>
 </body>

@@ -1,5 +1,6 @@
 <?php
-// Function to read CSV and return array
+include 'db.php';
+
 function readCSV($filename) {
     $data = [];
     if (($handle = fopen($filename, "r")) !== FALSE) {
@@ -14,9 +15,34 @@ function readCSV($filename) {
     return $data;
 }
 
-// Read data from CSV files
 $skills = readCSV('csv/skills.csv');
 $projects = readCSV('csv/projects.csv');
+
+// Fetch hero data from database
+$hero = [];
+try {
+    $stmt = $pdo->query("SELECT * FROM hero LIMIT 1");
+    $hero = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Fallback to default if DB fails
+    $hero = [
+        'name' => 'Hi, Yedunandan Nambiar Here!',
+        'title' => 'Data Analyst',
+        'description' => 'Welcome to My Portfolio',
+        'image' => 'images/yedu-portfolio.jpg'
+    ];
+}
+
+// Fetch about data from database
+$about = '';
+try {
+    $stmt = $pdo->query("SELECT * FROM about LIMIT 1");
+    $aboutData = $stmt->fetch(PDO::FETCH_ASSOC);
+    $about = $aboutData['content'];
+} catch (PDOException $e) {
+    // Fallback to default if DB fails
+    $about = 'I am a passionate Data Analyst with a strong interest in transforming raw data into actionable insights. I specialize in data visualization, statistical analysis, and solving real-world problems using tools like SQL, Python, and Excel. With a detail-oriented mindset, I enjoy uncovering patterns and trends that help businesses make informed decisions. I\'m constantly learning new techniques to enhance my analytical skills and contribute to impactful projects. My goal is to use data-driven strategies to create value and support growth.';
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,23 +67,23 @@ $projects = readCSV('csv/projects.csv');
 <!-- Hero Section -->
 <section id="home" class="hero">
   <div class="hero-text">
-    <h1>Hi, Yedunandan Nambiar Here!</h1>
-    <p>Data Analyst</p>
-    <p>Welcome to My Portfolio</p>
+    <h1><?php echo htmlspecialchars($hero['name']); ?></h1>
+    <p><?php echo htmlspecialchars($hero['title']); ?></p>
+    <p><?php echo htmlspecialchars($hero['description']); ?></p>
     <a href="cv.pdf" download class="download-btn">
       <i class="fas fa-download"></i>
       Download CV
     </a>
   </div>
   <div class="hero-image">
-    <img src="images/yedu-portfolio.jpg" alt="Profile Photo">
+    <img src="<?php echo htmlspecialchars($hero['image']); ?>" alt="Profile Photo">
   </div>
 </section>
 
 <!-- About -->
 <section id="about" class="about">
   <h2>About Me</h2>
-  <p>I am a passionate Data Analyst with a strong interest in transforming raw data into actionable insights. I specialize in data visualization, statistical analysis, and solving real-world problems using tools like SQL, Python, and Excel. With a detail-oriented mindset, I enjoy uncovering patterns and trends that help businesses make informed decisions. I'm constantly learning new techniques to enhance my analytical skills and contribute to impactful projects. My goal is to use data-driven strategies to create value and support growth.</p>
+  <p><?php echo htmlspecialchars($about); ?></p>
 
 <!-- Education -->
 <section id="education" class="education">
