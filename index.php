@@ -33,6 +33,21 @@ try {
     ];
 }
 
+// Check if hero data was fetched successfully, otherwise use default
+if (!$hero) {
+    $hero = [
+        'name' => 'Hi, Yedunandan Nambiar Here!',
+        'title' => 'Data Analyst',
+        'description' => 'Welcome to My Portfolio',
+        'image' => 'images/yedu-portfolio.jpg'
+    ];
+}
+
+// File path validation: Check if the image file exists, otherwise fallback to default
+if (!file_exists($hero['image'])) {
+    $hero['image'] = 'images/yedu-portfolio.jpg';
+}
+
 // Fetch about data from database
 $about = '';
 try {
@@ -76,7 +91,7 @@ try {
     </a>
   </div>
   <div class="hero-image">
-    <img src="<?php echo htmlspecialchars($hero['image']); ?>" alt="Profile Photo">
+    <img src="<?php echo htmlspecialchars($hero['image']) . '?v=' . time(); ?>" alt="Profile Photo">
   </div>
 </section>
 
